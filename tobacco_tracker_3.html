@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>父のタバコ帳</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0c0a; --surface: #161412; --border: #272420; --border2: #1e1c18;
+    --gold: #c8a85a; --gold2: #e8c87a; --text: #f0ede6; --muted: #7a7168; --dim: #4a4840;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Noto Serif JP', serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+  header { width: 100%; border-bottom: 1px solid var(--border); padding: 28px 0 18px; text-align: center; background: var(--bg); position: sticky; top: 0; z-index: 10; }
+  .header-sub { font-size: 10px; letter-spacing: 5px; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+  .header-title { font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 4px; color: var(--text); }
+  .header-price { font-size: 11px; color: var(--dim); letter-spacing: 2px; margin-top: 4px; }
+  .container { width: 100%; max-width: 420px; padding: 0 20px 60px; }
+  .summary { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 24px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 16px 18px; }
+  .card-label { font-size: 9px; letter-spacing: 4px; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
+  .card-amount { font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 1px; color: var(--gold2); line-height: 1; }
+  .card-amount.small { font-size: 22px; color: var(--gold); }
+  .card-boxes { font-size: 11px; color: var(--dim); margin-top: 5px; }
+
+  /* Graph */
+  .graph-section { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 20px 16px 14px; margin-top: 14px; }
+  .graph-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .graph-title { font-size: 9px; letter-spacing: 4px; color: var(--muted); text-transform: uppercase; }
+  .graph-month { font-size: 11px; color: var(--dim); }
+  .graph-area { display: flex; align-items: flex-end; gap: 3px; height: 80px; overflow-x: auto; padding-bottom: 4px; }
+  .graph-area::-webkit-scrollbar { height: 3px; }
+  .graph-area::-webkit-scrollbar-track { background: var(--border2); }
+  .graph-area::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 2px; }
+  .bar-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0; width: calc(100% / 31); min-width: 9px; }
+  .bar { width: 100%; background: var(--gold); border-radius: 1px 1px 0 0; min-height: 0; }
+  .bar.today-bar { background: var(--gold2); }
+  .bar.empty { background: var(--border); min-height: 2px; }
+  .bar-label { font-size: 7px; color: var(--dim); text-align: center; line-height: 1; }
+  .bar-label.today-label { color: var(--gold2); }
+  .graph-zero { width: 100%; height: 1px; background: var(--border); }
+
+  /* Input */
+  .input-section { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 22px 20px; margin-top: 14px; }
+  .section-label { font-size: 9px; letter-spacing: 4px; color: var(--muted); text-transform: uppercase; margin-bottom: 18px; }
+  .counter-row { display: flex; align-items: center; margin-bottom: 16px; }
+  .btn-count { width: 48px; height: 48px; background: #1e1c18; border: 1px solid var(--border); color: var(--text); font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 2px; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
+  .btn-count:active { background: #2a2824; }
+  .counter-display { flex: 1; text-align: center; padding: 0 10px; }
+  .counter-num { font-family: 'Bebas Neue', sans-serif; font-size: 52px; color: var(--text); line-height: 1; }
+  .counter-unit { font-size: 13px; color: var(--muted); }
+  .counter-price { font-size: 13px; color: var(--dim); margin-top: 3px; }
+  .btn-add { width: 100%; padding: 15px 0; background: var(--gold); color: var(--bg); border: none; border-radius: 2px; font-family: 'Noto Serif JP', serif; font-size: 13px; font-weight: 700; letter-spacing: 4px; cursor: pointer; transition: background 0.25s, color 0.25s; -webkit-tap-highlight-color: transparent; }
+  .btn-add.success { background: #4a8a4a; color: #fff; letter-spacing: 2px; }
+  .btn-add.loading { background: #3a3830; color: var(--muted); }
+  .btn-add:disabled { cursor: not-allowed; }
+
+  /* History */
+  .history-toggle { width: 100%; margin-top: 14px; padding: 13px 0; background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 2px; font-size: 10px; letter-spacing: 4px; text-transform: uppercase; cursor: pointer; font-family: 'Noto Serif JP', serif; -webkit-tap-highlight-color: transparent; }
+  .history-list { margin-top: 6px; border: 1px solid var(--border); border-radius: 2px; overflow: hidden; display: none; }
+  .history-list.open { display: block; }
+  .history-empty { padding: 20px; text-align: center; font-size: 12px; color: var(--dim); }
+  .history-item { display: flex; align-items: center; padding: 11px 16px; border-bottom: 1px solid var(--border2); gap: 8px; }
+  .history-item:last-child { border-bottom: none; }
+  .history-item:nth-child(even) { background: #131210; }
+  .h-date { font-size: 13px; color: var(--muted); min-width: 44px; }
+  .h-boxes-wrap { flex: 1; display: flex; align-items: center; gap: 6px; }
+  .h-boxes { font-size: 14px; color: var(--text); }
+  .h-amount { font-size: 13px; color: var(--gold); min-width: 70px; text-align: right; }
+  .btn-edit { background: transparent; border: 1px solid var(--border); color: var(--muted); font-size: 10px; padding: 2px 7px; border-radius: 2px; cursor: pointer; letter-spacing: 1px; -webkit-tap-highlight-color: transparent; }
+  .btn-edit:active { background: #2a2824; }
+  .month-divider { font-size: 9px; letter-spacing: 4px; color: var(--dim); text-transform: uppercase; padding: 10px 16px 6px; background: #0f0e0c; border-bottom: 1px solid var(--border2); }
+
+  /* Status */
+  .status-bar { margin-top: 14px; padding: 10px 14px; border-radius: 2px; font-size: 11px; letter-spacing: 1px; text-align: center; display: none; }
+  .status-bar.error { display: block; background: #2a1010; border: 1px solid #5a2020; color: #e87a7a; }
+  .status-bar.info { display: block; background: #1a1814; border: 1px solid var(--border); color: var(--muted); }
+
+  /* Edit modal */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 100; align-items: center; justify-content: center; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: #1a1814; border: 1px solid var(--border); border-radius: 2px; padding: 28px 24px; width: 300px; max-width: 90vw; }
+  .modal-title { font-size: 9px; letter-spacing: 4px; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+  .modal-date { font-size: 18px; color: var(--text); margin-bottom: 20px; }
+  .modal-counter { display: flex; align-items: center; gap: 0; margin-bottom: 24px; }
+  .modal-num { font-family: 'Bebas Neue', sans-serif; font-size: 48px; color: var(--text); flex: 1; text-align: center; line-height: 1; }
+  .modal-actions { display: flex; gap: 10px; }
+  .btn-modal-cancel { flex: 1; padding: 12px 0; background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 2px; font-size: 12px; letter-spacing: 2px; cursor: pointer; font-family: 'Noto Serif JP', serif; }
+  .btn-modal-save { flex: 1; padding: 12px 0; background: var(--gold); color: var(--bg); border: none; border-radius: 2px; font-size: 12px; font-weight: 700; letter-spacing: 2px; cursor: pointer; font-family: 'Noto Serif JP', serif; }
+  .btn-modal-save:disabled { background: #3a3830; color: var(--muted); }
+
+  /* むせるおじさん演出 */
+  .cough-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; align-items: center; justify-content: center; flex-direction: column; pointer-events: none; }
+  .cough-overlay.show { display: flex; }
+  .cough-icon { font-size: 80px; animation: cough 0.3s ease infinite alternate; }
+  .cough-text { margin-top: 12px; font-size: 14px; color: #e8d090; letter-spacing: 3px; animation: fadeIn 0.2s ease; }
+  .smoke { position: absolute; font-size: 24px; animation: floatUp 1.2s ease forwards; opacity: 0; }
+  @keyframes cough {
+    0% { transform: rotate(-8deg) scale(1); }
+    100% { transform: rotate(8deg) scale(1.1); }
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes floatUp {
+    0% { opacity: 0.9; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-80px) scale(1.5); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-sub">IQOS Daily Record</div>
+  <div class="header-title">父のタバコ帳</div>
+  <div class="header-price">¥580 / 箱</div>
+</header>
+
+<div class="container">
+  <div class="summary">
+    <div class="card">
+      <div class="card-label">今月</div>
+      <div class="card-amount" id="monthAmount">—</div>
+      <div class="card-boxes" id="monthBoxes">読込中...</div>
+    </div>
+    <div class="card">
+      <div class="card-label">累計</div>
+      <div class="card-amount small" id="totalAmount">—</div>
+      <div class="card-boxes" id="totalBoxes"></div>
+    </div>
+  </div>
+
+  <div class="graph-section">
+    <div class="graph-header">
+      <div class="graph-title">今月の推移</div>
+      <div class="graph-month" id="graphMonth"></div>
+    </div>
+    <div class="graph-area" id="graphArea"></div>
+    <div class="graph-zero"></div>
+  </div>
+
+  <div class="input-section">
+    <div class="section-label">本日購入を記録</div>
+    <div class="counter-row">
+      <button class="btn-count" onclick="changeCount(-1)">−</button>
+      <div class="counter-display">
+        <div class="counter-num" id="countNum">1</div>
+        <span class="counter-unit">箱</span>
+        <div class="counter-price" id="countPrice">¥580</div>
+      </div>
+      <button class="btn-count" onclick="changeCount(1)">＋</button>
+    </div>
+    <button class="btn-add" id="btnAdd" onclick="addRecord()">購入記録</button>
+  </div>
+
+  <div class="status-bar" id="statusBar"></div>
+
+  <button class="history-toggle" onclick="toggleHistory()" id="historyToggle">▼ 購入履歴</button>
+  <div class="history-list" id="historyList"></div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <div class="modal-title">箱数を修正</div>
+    <div class="modal-date" id="modalDate"></div>
+    <div class="modal-counter">
+      <button class="btn-count" onclick="changeModalCount(-1)">−</button>
+      <div class="modal-num" id="modalNum">1</div>
+      <button class="btn-count" onclick="changeModalCount(1)">＋</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" onclick="closeModal()">キャンセル</button>
+      <button class="btn-modal-save" id="btnModalSave" onclick="saveEdit()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- むせるおじさん -->
+<div class="cough-overlay" id="coughOverlay">
+  <div style="position:relative; text-align:center;">
+    <div class="cough-icon" id="coughIcon">🚬👴</div>
+    <div class="cough-text" id="coughText">ゴホッ ゴホッ！！</div>
+  </div>
+</div>
+
+<script>
+const PRICE = 580;
+const GAS_URL = "https://script.google.com/macros/s/AKfycbzU7B6sV1O9v31YT5dZcHpkW7VocfBBaD__yNgk0w-2-vR8nKzXiJKSs9N77K89fF6n/exec";
+
+let count = 1;
+let records = [];
+let editDate = null;
+let editCount = 1;
+
+function jsonp(url) {
+  return new Promise((resolve, reject) => {
+    const cb = 'cb_' + Date.now();
+    const script = document.createElement('script');
+    script.src = url + '&callback=' + cb;
+    window[cb] = (data) => { delete window[cb]; document.body.removeChild(script); resolve(data); };
+    script.onerror = () => reject(new Error('通信エラー'));
+    document.body.appendChild(script);
+    setTimeout(() => reject(new Error('タイムアウト')), 10000);
+  });
+}
+
+function today() {
+  const d = new Date();
+  return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
+}
+function formatDisplay(dateStr) {
+  const p = dateStr.split('/');
+  return `${parseInt(p[1])}/${parseInt(p[2])}`;
+}
+function formatMonth(dateStr) {
+  const p = dateStr.split('/');
+  return `${p[0]}年${parseInt(p[1])}月`;
+}
+function showStatus(msg, type) {
+  const bar = document.getElementById('statusBar');
+  bar.textContent = msg;
+  bar.className = 'status-bar ' + type;
+  if (type !== 'info') setTimeout(() => { bar.className = 'status-bar'; }, 4000);
+}
+
+// むせるおじさん（箱の数だけ順番に登場）
+function showCough(boxes) {
+  const overlay = document.getElementById('coughOverlay');
+  const icon = document.getElementById('coughIcon');
+  const text = document.getElementById('coughText');
+  const INTERVAL = 1600;
+
+  const scenes = [
+    ['ゴホッ！', '🚬👴'],
+    ['ゴホッ ゴホッ！', '😮‍💨👴'],
+    ['むせた...', '🚬👴'],
+    ['うめ〜', '😌👴'],
+    ['ゴホゴホ！！', '😵👴'],
+    ['やばい...', '😵💨👴'],
+    ['肺が...', '🫁👴'],
+    ['吸いすぎ！！', '💀👴'],
+  ];
+
+  for (let i = 0; i < boxes; i++) {
+    setTimeout(() => {
+      const [msg, ico] = scenes[i % scenes.length];
+      icon.textContent = ico;
+      text.textContent = `${i + 1}箱目... ${msg}`;
+      overlay.classList.add('show');
+
+      for (let j = 0; j < 4; j++) {
+        setTimeout(() => {
+          const smoke = document.createElement('div');
+          smoke.className = 'smoke';
+          smoke.textContent = '💨';
+          smoke.style.left = (20 + Math.random() * 60) + '%';
+          smoke.style.top = (15 + Math.random() * 35) + '%';
+          overlay.querySelector('div').appendChild(smoke);
+          setTimeout(() => smoke.remove(), 1400);
+        }, j * 120);
+      }
+
+      if (i === boxes - 1) {
+        setTimeout(() => overlay.classList.remove('show'), INTERVAL - 200);
+      }
+    }, i * INTERVAL);
+  }
+}
+
+function changeCount(delta) {
+  count = Math.max(1, count + delta);
+  document.getElementById('countNum').textContent = count;
+  document.getElementById('countPrice').textContent = '¥' + (count * PRICE).toLocaleString();
+}
+
+async function fetchRecords() {
+  showStatus('スプレッドシートからデータ読み込み中...', 'info');
+  try {
+    const json = await jsonp(GAS_URL + '?action=get');
+    if (json.ok) {
+      records = json.data || [];
+      updateSummary(); renderHistory(); renderGraph();
+      document.getElementById('statusBar').className = 'status-bar';
+    } else { showStatus('読み込み失敗: ' + json.error, 'error'); }
+  } catch(e) { showStatus('通信エラー。ネット接続を確認してください。', 'error'); }
+}
+
+async function addRecord() {
+  const btn = document.getElementById('btnAdd');
+  btn.textContent = '送信中...'; btn.classList.add('loading'); btn.disabled = true;
+  const t = today();
+  try {
+    const json = await jsonp(`${GAS_URL}?action=add&date=${t}&boxes=${count}`);
+    if (json.ok) {
+      const existing = records.find(r => r.date === t);
+      if (existing) existing.boxes += count;
+      else records.push({ date: t, boxes: count });
+      updateSummary(); renderHistory(); renderGraph();
+      showCough(count);
+      btn.textContent = '✓ 記録しました'; btn.classList.remove('loading'); btn.classList.add('success');
+      setTimeout(() => { btn.textContent = '購入記録'; btn.classList.remove('success'); btn.disabled = false; }, 1400);
+    } else throw new Error(json.error);
+  } catch(e) {
+    showStatus('記録に失敗しました。再度お試しください。', 'error');
+    btn.textContent = '購入記録'; btn.classList.remove('loading'); btn.disabled = false;
+  }
+}
+
+// 修正モーダル
+function openEdit(date, currentBoxes) {
+  editDate = date;
+  editCount = currentBoxes;
+  document.getElementById('modalDate').textContent = formatDisplay(date) + ' (' + currentBoxes + '箱 → 修正)';
+  document.getElementById('modalNum').textContent = editCount;
+  document.getElementById('editModal').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('editModal').classList.remove('open');
+}
+function changeModalCount(delta) {
+  editCount = Math.max(0, editCount + delta);
+  document.getElementById('modalNum').textContent = editCount;
+}
+async function saveEdit() {
+  const btn = document.getElementById('btnModalSave');
+  btn.textContent = '保存中...'; btn.disabled = true;
+  try {
+    const json = await jsonp(`${GAS_URL}?action=set&date=${editDate}&boxes=${editCount}`);
+    if (json.ok) {
+      if (editCount === 0) {
+        records = records.filter(r => r.date !== editDate);
+      } else {
+        const rec = records.find(r => r.date === editDate);
+        if (rec) rec.boxes = editCount;
+      }
+      updateSummary(); renderHistory(); renderGraph();
+      closeModal();
+    } else throw new Error(json.error);
+  } catch(e) {
+    alert('保存に失敗しました。');
+  }
+  btn.textContent = '保存'; btn.disabled = false;
+}
+
+function renderGraph() {
+  const d = new Date();
+  const year = d.getFullYear(), month = d.getMonth() + 1, todayDay = d.getDate();
+  const daysInMonth = new Date(year, month, 0).getDate();
+  const ym = `${year}/${String(month).padStart(2,'0')}`;
+  document.getElementById('graphMonth').textContent = `${year}年${month}月`;
+  const dayMap = {};
+  records.filter(r => r.date.startsWith(ym)).forEach(r => {
+    const day = parseInt(r.date.split('/')[2]);
+    dayMap[day] = (dayMap[day] || 0) + r.boxes;
+  });
+  const maxBoxes = Math.max(...Object.values(dayMap), 1);
+  let html = '';
+  for (let day = 1; day <= daysInMonth; day++) {
+    const boxes = dayMap[day] || 0;
+    const isToday = day === todayDay, isFuture = day > todayDay;
+    const barH = boxes > 0 ? Math.max(4, Math.round((boxes / maxBoxes) * 72)) : 0;
+    const barClass = boxes === 0 ? 'bar empty' : (isToday ? 'bar today-bar' : 'bar');
+    html += `<div class="bar-wrap" style="${isFuture ? 'opacity:0.3' : ''}">
+      <div class="${barClass}" style="height:${barH}px"></div>
+      <div class="bar-label${isToday ? ' today-label' : ''}">${day}</div>
+    </div>`;
+  }
+  document.getElementById('graphArea').innerHTML = html;
+  const area = document.getElementById('graphArea');
+  const barW = area.scrollWidth / daysInMonth;
+  area.scrollLeft = Math.max(0, barW * (todayDay - 8));
+}
+
+function updateSummary() {
+  const t = today(), ym = t.slice(0, 7);
+  const monthBoxes = records.filter(r => r.date.startsWith(ym)).reduce((s,r) => s+r.boxes, 0);
+  const totalBoxes = records.reduce((s,r) => s+r.boxes, 0);
+  document.getElementById('monthAmount').textContent = '¥' + (monthBoxes * PRICE).toLocaleString();
+  document.getElementById('monthBoxes').textContent = monthBoxes + ' 箱';
+  document.getElementById('totalAmount').textContent = '¥' + (totalBoxes * PRICE).toLocaleString();
+  document.getElementById('totalBoxes').textContent = totalBoxes + ' 箱';
+}
+
+function renderHistory() {
+  const sorted = [...records].sort((a,b) => b.date.localeCompare(a.date));
+  const list = document.getElementById('historyList');
+  if (sorted.length === 0) { list.innerHTML = '<div class="history-empty">記録がありません</div>'; return; }
+  let html = '', lastMonth = '';
+  sorted.forEach(r => {
+    const m = formatMonth(r.date);
+    if (m !== lastMonth) { html += `<div class="month-divider">${m}</div>`; lastMonth = m; }
+    html += `<div class="history-item">
+      <span class="h-date">${formatDisplay(r.date)}</span>
+      <div class="h-boxes-wrap">
+        <span class="h-boxes">${r.boxes} 箱</span>
+        <button class="btn-edit" onclick="openEdit('${r.date}', ${r.boxes})">修正</button>
+      </div>
+      <span class="h-amount">¥${(r.boxes * PRICE).toLocaleString()}</span>
+    </div>`;
+  });
+  list.innerHTML = html;
+}
+
+function toggleHistory() {
+  const list = document.getElementById('historyList');
+  const btn = document.getElementById('historyToggle');
+  list.classList.toggle('open');
+  btn.textContent = list.classList.contains('open') ? '▲ 履歴を閉じる' : '▼ 購入履歴';
+}
+
+fetchRecords();
+</script>
+</body>
+</html>
