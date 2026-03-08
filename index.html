@@ -9,127 +9,119 @@
   :root {
     --bg: #0d0c0a; --surface: #161412; --border: #272420; --border2: #1e1c18;
     --gold: #c8a85a; --gold2: #e8c87a; --text: #f0ede6; --muted: #7a7168; --dim: #4a4840;
+    --red: #e87a7a; --redbg: #2a1010; --redborder: #5a2020;
+    --green: #4a8a4a;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   body { background: var(--bg); color: var(--text); font-family: 'Noto Serif JP', serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
-  header { width: 100%; border-bottom: 1px solid var(--border); padding: 28px 0 18px; text-align: center; background: var(--bg); position: sticky; top: 0; z-index: 10; }
-  .header-sub { font-size: 10px; letter-spacing: 5px; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+
+  /* Header */
+  header { width: 100%; border-bottom: 1px solid var(--border); padding: 24px 0 16px; text-align: center; background: var(--bg); position: sticky; top: 0; z-index: 10; }
+  .header-sub { font-size: 10px; letter-spacing: 5px; color: var(--muted); text-transform: uppercase; margin-bottom: 5px; }
   .header-title { font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 4px; color: var(--text); }
   .header-price { font-size: 11px; color: var(--dim); letter-spacing: 2px; margin-top: 4px; }
-  .container { width: 100%; max-width: 420px; padding: 0 20px 60px; }
-  .summary { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 24px; }
+
+  .container { width: 100%; max-width: 420px; padding: 0 20px 80px; }
+
+  /* Summary */
+  .summary { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 22px; }
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 16px 18px; }
   .card-label { font-size: 9px; letter-spacing: 4px; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
-  .card-amount { font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 1px; color: var(--gold2); line-height: 1; }
+  .card-amount { font-family: 'Bebas Neue', sans-serif; font-size: 30px; color: var(--gold2); line-height: 1; }
   .card-amount.small { font-size: 22px; color: var(--gold); }
   .card-boxes { font-size: 11px; color: var(--dim); margin-top: 5px; }
 
-  .date-input-wrap {
-  margin-bottom: 16px;
-}
-.date-label {
-  display: block;
-  font-size: 10px;
-  letter-spacing: 2px;
-  color: var(--muted);
-  margin-bottom: 8px;
-}
-.date-input {
-  width: 100%;
-  padding: 12px 14px;
-  background: #1e1c18;
-  border: 1px solid var(--border);
-  color: var(--text);
-  border-radius: 2px;
-  font-family: 'Noto Serif JP', serif;
-  font-size: 14px;
-}
-.date-input::-webkit-calendar-picker-indicator {
-  filter: invert(0.8);
-  cursor: pointer;
-}
-
   /* Graph */
-  .graph-section { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 20px 16px 14px; margin-top: 14px; }
-  .graph-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .graph-section { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 18px 16px 12px; margin-top: 12px; }
+  .graph-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
   .graph-title { font-size: 9px; letter-spacing: 4px; color: var(--muted); text-transform: uppercase; }
-  .graph-month { font-size: 11px; color: var(--dim); }
+  .graph-hint { font-size: 9px; color: var(--dim); letter-spacing: 1px; }
   .graph-area { display: flex; align-items: flex-end; gap: 3px; height: 80px; overflow-x: auto; padding-bottom: 4px; }
   .graph-area::-webkit-scrollbar { height: 3px; }
   .graph-area::-webkit-scrollbar-track { background: var(--border2); }
   .graph-area::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 2px; }
-  .bar-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0; width: calc(100% / 31); min-width: 9px; }
-  .bar { width: 100%; background: var(--gold); border-radius: 1px 1px 0 0; min-height: 0; }
+  .bar-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0; width: calc(100% / 31); min-width: 10px; cursor: pointer; border-radius: 2px; padding: 2px 1px; transition: background 0.15s; }
+  .bar-wrap:active { background: rgba(200,168,90,0.15); }
+  .bar { width: 100%; background: var(--gold); border-radius: 1px 1px 0 0; min-height: 0; transition: background 0.2s; }
   .bar.today-bar { background: var(--gold2); }
   .bar.empty { background: var(--border); min-height: 2px; }
   .bar-label { font-size: 7px; color: var(--dim); text-align: center; line-height: 1; }
-  .bar-label.today-label { color: var(--gold2); }
-  .graph-zero { width: 100%; height: 1px; background: var(--border); }
+  .bar-label.today-label { color: var(--gold2); font-weight: bold; }
+  .graph-zero { width: 100%; height: 1px; background: var(--border); margin-top: 2px; }
+  .month-nav { display: flex; align-items: center; gap: 8px; }
+  .btn-nav { background: transparent; border: 1px solid var(--border); color: var(--muted); width: 36px; height: 36px; border-radius: 2px; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+  .btn-nav:active { background: #2a2824; color: var(--gold); }
+  .btn-nav:disabled { opacity: 0.3; cursor: not-allowed; }
 
   /* Input */
-  .input-section { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 22px 20px; margin-top: 14px; }
-  .section-label { font-size: 9px; letter-spacing: 4px; color: var(--muted); text-transform: uppercase; margin-bottom: 18px; }
-  .counter-row { display: flex; align-items: center; margin-bottom: 16px; }
-  .btn-count { width: 48px; height: 48px; background: #1e1c18; border: 1px solid var(--border); color: var(--text); font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 2px; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
+  .input-section { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 20px 20px; margin-top: 12px; }
+  .section-label { font-size: 9px; letter-spacing: 4px; color: var(--muted); text-transform: uppercase; margin-bottom: 16px; }
+  .counter-row { display: flex; align-items: center; margin-bottom: 14px; }
+  .btn-count { width: 48px; height: 48px; background: #1e1c18; border: 1px solid var(--border); color: var(--text); font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 2px; flex-shrink: 0; }
   .btn-count:active { background: #2a2824; }
-  .counter-display { flex: 1; text-align: center; padding: 0 10px; }
+  .counter-display { flex: 1; text-align: center; }
   .counter-num { font-family: 'Bebas Neue', sans-serif; font-size: 52px; color: var(--text); line-height: 1; }
   .counter-unit { font-size: 13px; color: var(--muted); }
   .counter-price { font-size: 13px; color: var(--dim); margin-top: 3px; }
-  .btn-add { width: 100%; padding: 15px 0; background: var(--gold); color: var(--bg); border: none; border-radius: 2px; font-family: 'Noto Serif JP', serif; font-size: 13px; font-weight: 700; letter-spacing: 4px; cursor: pointer; transition: background 0.25s, color 0.25s; -webkit-tap-highlight-color: transparent; }
-  .btn-add.success { background: #4a8a4a; color: #fff; letter-spacing: 2px; }
+  .btn-add { width: 100%; padding: 15px 0; background: var(--gold); color: var(--bg); border: none; border-radius: 2px; font-family: 'Noto Serif JP', serif; font-size: 13px; font-weight: 700; letter-spacing: 4px; cursor: pointer; transition: background 0.25s, color 0.25s; }
+  .btn-add.success { background: var(--green); color: #fff; letter-spacing: 2px; }
   .btn-add.loading { background: #3a3830; color: var(--muted); }
   .btn-add:disabled { cursor: not-allowed; }
 
+  /* Status */
+  .status-bar { margin-top: 12px; padding: 10px 14px; border-radius: 2px; font-size: 11px; letter-spacing: 1px; text-align: center; display: none; }
+  .status-bar.error { display: block; background: var(--redbg); border: 1px solid var(--redborder); color: var(--red); }
+  .status-bar.info { display: block; background: #1a1814; border: 1px solid var(--border); color: var(--muted); }
+  .status-bar.toast { display: block; background: #0a2010; border: 1px solid #2a5a2a; color: #7ae07a; }
+
   /* History */
-  .history-toggle { width: 100%; margin-top: 14px; padding: 13px 0; background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 2px; font-size: 10px; letter-spacing: 4px; text-transform: uppercase; cursor: pointer; font-family: 'Noto Serif JP', serif; -webkit-tap-highlight-color: transparent; }
+  .history-toggle { width: 100%; margin-top: 12px; padding: 13px 0; background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 2px; font-size: 10px; letter-spacing: 4px; text-transform: uppercase; cursor: pointer; font-family: 'Noto Serif JP', serif; }
   .history-list { margin-top: 6px; border: 1px solid var(--border); border-radius: 2px; overflow: hidden; display: none; }
   .history-list.open { display: block; }
   .history-empty { padding: 20px; text-align: center; font-size: 12px; color: var(--dim); }
-  .history-item { display: flex; align-items: center; padding: 11px 16px; border-bottom: 1px solid var(--border2); gap: 8px; }
+  .history-item { display: flex; align-items: center; padding: 11px 14px; border-bottom: 1px solid var(--border2); gap: 6px; }
   .history-item:last-child { border-bottom: none; }
   .history-item:nth-child(even) { background: #131210; }
-  .h-date { font-size: 13px; color: var(--muted); min-width: 44px; }
-  .h-boxes-wrap { flex: 1; display: flex; align-items: center; gap: 6px; }
-  .h-boxes { font-size: 14px; color: var(--text); }
-  .h-amount { font-size: 13px; color: var(--gold); min-width: 70px; text-align: right; }
-  .btn-edit { background: transparent; border: 1px solid var(--border); color: var(--muted); font-size: 10px; padding: 2px 7px; border-radius: 2px; cursor: pointer; letter-spacing: 1px; -webkit-tap-highlight-color: transparent; }
+  .h-date { font-size: 13px; color: var(--muted); min-width: 40px; }
+  .h-boxes { font-size: 14px; color: var(--text); flex: 1; }
+  .h-amount { font-size: 13px; color: var(--gold); min-width: 65px; text-align: right; }
+  .btn-edit { background: transparent; border: 1px solid var(--border); color: var(--muted); font-size: 10px; padding: 3px 8px; border-radius: 2px; cursor: pointer; letter-spacing: 1px; }
+  .btn-del { background: transparent; border: 1px solid var(--redborder); color: var(--red); font-size: 10px; padding: 3px 8px; border-radius: 2px; cursor: pointer; }
   .btn-edit:active { background: #2a2824; }
-  .month-divider { font-size: 9px; letter-spacing: 4px; color: var(--dim); text-transform: uppercase; padding: 10px 16px 6px; background: #0f0e0c; border-bottom: 1px solid var(--border2); }
+  .btn-del:active { background: var(--redbg); }
+  .month-divider { font-size: 9px; letter-spacing: 4px; color: var(--dim); text-transform: uppercase; padding: 10px 14px 6px; background: #0f0e0c; border-bottom: 1px solid var(--border2); }
 
-  /* Status */
-  .status-bar { margin-top: 14px; padding: 10px 14px; border-radius: 2px; font-size: 11px; letter-spacing: 1px; text-align: center; display: none; }
-  .status-bar.error { display: block; background: #2a1010; border: 1px solid #5a2020; color: #e87a7a; }
-  .status-bar.info { display: block; background: #1a1814; border: 1px solid var(--border); color: var(--muted); }
-
-  /* Edit modal */
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 100; align-items: center; justify-content: center; }
+  /* Modal */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; align-items: center; justify-content: center; }
   .modal-overlay.open { display: flex; }
-  .modal { background: #1a1814; border: 1px solid var(--border); border-radius: 2px; padding: 28px 24px; width: 300px; max-width: 90vw; }
-  .modal-title { font-size: 9px; letter-spacing: 4px; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
-  .modal-date { font-size: 18px; color: var(--text); margin-bottom: 20px; }
-  .modal-counter { display: flex; align-items: center; gap: 0; margin-bottom: 24px; }
-  .modal-num { font-family: 'Bebas Neue', sans-serif; font-size: 48px; color: var(--text); flex: 1; text-align: center; line-height: 1; }
+  .modal { background: #1a1814; border: 1px solid var(--border); border-radius: 2px; padding: 26px 22px; width: 300px; max-width: 90vw; }
+  .modal-title { font-size: 9px; letter-spacing: 4px; color: var(--muted); text-transform: uppercase; margin-bottom: 5px; }
+  .modal-date { font-size: 20px; color: var(--text); margin-bottom: 18px; }
+  .modal-counter { display: flex; align-items: center; margin-bottom: 20px; }
+  .modal-num { font-family: 'Bebas Neue', sans-serif; font-size: 52px; color: var(--text); flex: 1; text-align: center; line-height: 1; }
+  .modal-sub { font-size: 12px; color: var(--dim); text-align: center; margin-top: 2px; margin-bottom: 18px; }
   .modal-actions { display: flex; gap: 10px; }
   .btn-modal-cancel { flex: 1; padding: 12px 0; background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 2px; font-size: 12px; letter-spacing: 2px; cursor: pointer; font-family: 'Noto Serif JP', serif; }
   .btn-modal-save { flex: 1; padding: 12px 0; background: var(--gold); color: var(--bg); border: none; border-radius: 2px; font-size: 12px; font-weight: 700; letter-spacing: 2px; cursor: pointer; font-family: 'Noto Serif JP', serif; }
-  .btn-modal-save:disabled { background: #3a3830; color: var(--muted); }
+  .btn-modal-save:disabled { background: #3a3830; color: var(--muted); cursor: not-allowed; }
+  .btn-modal-delete { width: 100%; margin-top: 8px; padding: 10px 0; background: transparent; border: 1px solid var(--redborder); color: var(--red); border-radius: 2px; font-size: 11px; letter-spacing: 2px; cursor: pointer; font-family: 'Noto Serif JP', serif; }
 
-  /* むせるおじさん演出 */
-  .cough-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; align-items: center; justify-content: center; flex-direction: column; pointer-events: none; }
+  /* Passcode */
+  .passcode-section { margin-bottom: 18px; }
+  .passcode-label { font-size: 9px; letter-spacing: 3px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; }
+  .passcode-input { width: 100%; background: #0f0e0c; border: 1px solid var(--border); color: var(--text); font-size: 16px; padding: 10px 14px; border-radius: 2px; letter-spacing: 6px; text-align: center; font-family: 'Bebas Neue', sans-serif; }
+  .passcode-input:focus { outline: none; border-color: var(--gold); }
+  .passcode-error { font-size: 11px; color: var(--red); margin-top: 6px; text-align: center; display: none; }
+  .passcode-error.show { display: block; }
+
+  /* むせるおじさん */
+  .cough-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 200; align-items: center; justify-content: center; flex-direction: column; pointer-events: none; }
   .cough-overlay.show { display: flex; }
   .cough-icon { font-size: 80px; animation: cough 0.3s ease infinite alternate; }
-  .cough-text { margin-top: 12px; font-size: 14px; color: #e8d090; letter-spacing: 3px; animation: fadeIn 0.2s ease; }
-  .smoke { position: absolute; font-size: 24px; animation: floatUp 1.2s ease forwards; opacity: 0; }
-  @keyframes cough {
-    0% { transform: rotate(-8deg) scale(1); }
-    100% { transform: rotate(8deg) scale(1.1); }
-  }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes floatUp {
-    0% { opacity: 0.9; transform: translateY(0) scale(1); }
-    100% { opacity: 0; transform: translateY(-80px) scale(1.5); }
-  }
+  .cough-text { margin-top: 12px; font-size: 15px; color: #e8d090; letter-spacing: 3px; }
+  .smoke { position: absolute; font-size: 22px; animation: floatUp 1.3s ease forwards; opacity: 0; }
+  @keyframes cough { 0% { transform: rotate(-8deg) scale(1); } 100% { transform: rotate(8deg) scale(1.1); } }
+  @keyframes floatUp { 0% { opacity: 0.9; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-90px) scale(1.6); } }
 </style>
 </head>
 <body>
@@ -156,32 +148,30 @@
 
   <div class="graph-section">
     <div class="graph-header">
-      <div class="graph-title">今月の推移</div>
-      <div class="graph-month" id="graphMonth"></div>
+      <div class="graph-title">推移</div>
+      <div class="month-nav">
+        <button class="btn-nav" id="btnPrevMonth">&#8249;</button>
+        <div class="graph-hint" id="graphMonth"></div>
+        <button class="btn-nav" id="btnNextMonth">&#8250;</button>
+      </div>
     </div>
     <div class="graph-area" id="graphArea"></div>
     <div class="graph-zero"></div>
   </div>
 
-<div class="input-section">
-  <div class="section-label">購入を記録</div>
-
-  <div class="date-input-wrap">
-    <label for="recordDate" class="date-label">日付</label>
-    <input type="date" id="recordDate" class="date-input">
-  </div>
-
-  <div class="counter-row">
-    <button class="btn-count" onclick="changeCount(-1)">−</button>
-    <div class="counter-display">
-      <div class="counter-num" id="countNum">1</div>
-      <span class="counter-unit">箱</span>
-      <div class="counter-price" id="countPrice">¥580</div>
+  <div class="input-section">
+    <div class="section-label">本日購入を記録</div>
+    <div class="counter-row">
+      <button class="btn-count" onclick="changeCount(-1)">−</button>
+      <div class="counter-display">
+        <div class="counter-num" id="countNum">1</div>
+        <span class="counter-unit">箱</span>
+        <div class="counter-price" id="countPrice">¥580</div>
+      </div>
+      <button class="btn-count" onclick="changeCount(1)">＋</button>
     </div>
-    <button class="btn-count" onclick="changeCount(1)">＋</button>
+    <button class="btn-add" id="btnAdd" onclick="confirmAndAdd()">購入記録</button>
   </div>
-  <button class="btn-add" id="btnAdd" onclick="addRecord()">購入記録</button>
-</div>
 
   <div class="status-bar" id="statusBar"></div>
 
@@ -193,21 +183,23 @@
 <div class="modal-overlay" id="editModal">
   <div class="modal">
     <div class="modal-title">記録を修正</div>
-
-    <div style="margin-bottom:16px;">
-      <label for="modalDateInput" class="date-label">日付</label>
-      <input type="date" id="modalDateInput" class="date-input">
+    <div class="modal-date" id="modalDate"></div>
+    <div class="passcode-section">
+      <div class="passcode-label">パスコード</div>
+      <input class="passcode-input" id="passcodeInput" type="password" maxlength="4" placeholder="••••" inputmode="numeric">
+      <div class="passcode-error" id="passcodeError">パスコードが違います</div>
     </div>
-
-<div class="modal-counter">
+    <div class="modal-counter">
       <button class="btn-count" onclick="changeModalCount(-1)">−</button>
       <div class="modal-num" id="modalNum">1</div>
       <button class="btn-count" onclick="changeModalCount(1)">＋</button>
     </div>
+    <div class="modal-sub" id="modalSub"></div>
     <div class="modal-actions">
       <button class="btn-modal-cancel" onclick="closeModal()">キャンセル</button>
       <button class="btn-modal-save" id="btnModalSave" onclick="saveEdit()">保存</button>
     </div>
+    <button class="btn-modal-delete" onclick="deleteRecord()">この日の記録を削除</button>
   </div>
 </div>
 
@@ -215,19 +207,43 @@
 <div class="cough-overlay" id="coughOverlay">
   <div style="position:relative; text-align:center;">
     <div class="cough-icon" id="coughIcon">🚬👴</div>
-    <div class="cough-text" id="coughText">ゴホッ ゴホッ！！</div>
+    <div class="cough-text" id="coughText">ゴホッ！</div>
   </div>
 </div>
 
 <script>
 const PRICE = 580;
-const GAS_URL = "https://script.google.com/macros/s/AKfycbzU7B6sV1O9v31YT5dZcHpkW7VocfBBaD__yNgk0w-2-vR8nKzXiJKSs9N77K89fF6n/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbwBUwgoOGzsUWOpKewWG_9m_oDp36HMgNYEJ6CN1IyuQ0Qogxk9F5IGiLuQ_qw5eS-e/exec";
+const PASSCODE = "0000";
 
 let count = 1;
 let records = [];
 let editDate = null;
 let editCount = 1;
 
+// 表示中の年月（デフォルト：今月）
+const _now = new Date();
+let viewYear = _now.getFullYear();
+let viewMonth = _now.getMonth() + 1;
+
+function changeViewMonth(delta) {
+  viewMonth += delta;
+  if (viewMonth > 12) { viewMonth = 1; viewYear++; }
+  if (viewMonth < 1)  { viewMonth = 12; viewYear--; }
+  // 未来月は進めない
+  const now = new Date();
+  if (viewYear > now.getFullYear() || (viewYear === now.getFullYear() && viewMonth > now.getMonth() + 1)) {
+    viewMonth -= delta;
+    if (viewMonth > 12) { viewMonth = 1; viewYear++; }
+    if (viewMonth < 1)  { viewMonth = 12; viewYear--; }
+    return;
+  }
+  renderGraph();
+  updateSummary();
+  renderHistory();
+}
+
+// JSONP
 function jsonp(url) {
   return new Promise((resolve, reject) => {
     const cb = 'cb_' + Date.now();
@@ -236,7 +252,7 @@ function jsonp(url) {
     window[cb] = (data) => { delete window[cb]; document.body.removeChild(script); resolve(data); };
     script.onerror = () => reject(new Error('通信エラー'));
     document.body.appendChild(script);
-    setTimeout(() => reject(new Error('タイムアウト')), 10000);
+    setTimeout(() => { reject(new Error('タイムアウト')); }, 12000);
   });
 }
 
@@ -256,16 +272,15 @@ function showStatus(msg, type) {
   const bar = document.getElementById('statusBar');
   bar.textContent = msg;
   bar.className = 'status-bar ' + type;
-  if (type !== 'info') setTimeout(() => { bar.className = 'status-bar'; }, 4000);
+  if (type !== 'info') setTimeout(() => { bar.className = 'status-bar'; }, 3000);
 }
 
-// むせるおじさん（箱の数だけ順番に登場）
+// むせるおじさん（箱の数だけ登場）
 function showCough(boxes) {
   const overlay = document.getElementById('coughOverlay');
   const icon = document.getElementById('coughIcon');
   const text = document.getElementById('coughText');
   const INTERVAL = 1600;
-
   const scenes = [
     ['ゴホッ！', '🚬👴'],
     ['ゴホッ ゴホッ！', '😮‍💨👴'],
@@ -276,14 +291,12 @@ function showCough(boxes) {
     ['肺が...', '🫁👴'],
     ['吸いすぎ！！', '💀👴'],
   ];
-
   for (let i = 0; i < boxes; i++) {
     setTimeout(() => {
       const [msg, ico] = scenes[i % scenes.length];
       icon.textContent = ico;
-      text.textContent = `${i + 1}箱目... ${msg}`;
+      text.textContent = `${i+1}箱目... ${msg}`;
       overlay.classList.add('show');
-
       for (let j = 0; j < 4; j++) {
         setTimeout(() => {
           const smoke = document.createElement('div');
@@ -295,10 +308,7 @@ function showCough(boxes) {
           setTimeout(() => smoke.remove(), 1400);
         }, j * 120);
       }
-
-      if (i === boxes - 1) {
-        setTimeout(() => overlay.classList.remove('show'), INTERVAL - 200);
-      }
+      if (i === boxes - 1) setTimeout(() => overlay.classList.remove('show'), INTERVAL - 200);
     }, i * INTERVAL);
   }
 }
@@ -309,8 +319,14 @@ function changeCount(delta) {
   document.getElementById('countPrice').textContent = '¥' + (count * PRICE).toLocaleString();
 }
 
+// パスコード確認してから記録
+function confirmAndAdd() {
+  // 購入記録はパスコード不要（父が使いやすいように）
+  addRecord();
+}
+
 async function fetchRecords() {
-  showStatus('スプレッドシートからデータ読み込み中...', 'info');
+  showStatus('データ読み込み中...', 'info');
   try {
     const json = await jsonp(GAS_URL + '?action=get');
     if (json.ok) {
@@ -321,16 +337,31 @@ async function fetchRecords() {
   } catch(e) { showStatus('通信エラー。ネット接続を確認してください。', 'error'); }
 }
 
+// スマホ対応：touchとclickの両方でナビボタンを動かす
+function setupNavButtons() {
+  function addNav(id, delta) {
+    const btn = document.getElementById(id);
+    if (!btn) return;
+    let fired = false;
+    btn.addEventListener('touchstart', (e) => { e.preventDefault(); fired = true; changeViewMonth(delta); }, { passive: false });
+    btn.addEventListener('click', () => { if (!fired) changeViewMonth(delta); fired = false; });
+  }
+  addNav('btnPrevMonth', -1);
+  addNav('btnNextMonth', 1);
+}
+
 async function addRecord() {
   const btn = document.getElementById('btnAdd');
   btn.textContent = '送信中...'; btn.classList.add('loading'); btn.disabled = true;
   const t = today();
   try {
-    const json = await jsonp(`${GAS_URL}?action=add&date=${t}&boxes=${count}`);
+    // まず今日の現在の値を取得してから加算する
+    const existing = records.find(r => r.date === t);
+    const newBoxes = (existing ? existing.boxes : 0) + count;
+    const json = await jsonp(`${GAS_URL}?action=set&date=${encodeURIComponent(t)}&boxes=${newBoxes}`);
     if (json.ok) {
-      const existing = records.find(r => r.date === t);
-      if (existing) existing.boxes += count;
-      else records.push({ date: t, boxes: count });
+      if (existing) existing.boxes = newBoxes;
+      else records.push({ date: t, boxes: newBoxes });
       updateSummary(); renderHistory(); renderGraph();
       showCough(count);
       btn.textContent = '✓ 記録しました'; btn.classList.remove('loading'); btn.classList.add('success');
@@ -342,12 +373,15 @@ async function addRecord() {
   }
 }
 
-// 修正モーダル
+// モーダル
 function openEdit(date, currentBoxes) {
   editDate = date;
   editCount = currentBoxes;
-  document.getElementById('modalDate').textContent = formatDisplay(date) + ' (' + currentBoxes + '箱 → 修正)';
+  document.getElementById('modalDate').textContent = formatDisplay(date);
   document.getElementById('modalNum').textContent = editCount;
+  document.getElementById('modalSub').textContent = '¥' + (editCount * PRICE).toLocaleString();
+  document.getElementById('passcodeInput').value = '';
+  document.getElementById('passcodeError').classList.remove('show');
   document.getElementById('editModal').classList.add('open');
 }
 function closeModal() {
@@ -356,82 +390,118 @@ function closeModal() {
 function changeModalCount(delta) {
   editCount = Math.max(0, editCount + delta);
   document.getElementById('modalNum').textContent = editCount;
+  document.getElementById('modalSub').textContent = editCount > 0 ? '¥' + (editCount * PRICE).toLocaleString() : '削除されます';
+}
+function checkPasscode() {
+  const input = document.getElementById('passcodeInput').value;
+  if (input !== PASSCODE) {
+    document.getElementById('passcodeError').classList.add('show');
+    return false;
+  }
+  document.getElementById('passcodeError').classList.remove('show');
+  return true;
 }
 async function saveEdit() {
+  if (!checkPasscode()) return;
   const btn = document.getElementById('btnModalSave');
   btn.textContent = '保存中...'; btn.disabled = true;
   try {
-    const json = await jsonp(`${GAS_URL}?action=set&date=${editDate}&boxes=${editCount}`);
+    const json = await jsonp(`${GAS_URL}?action=set&date=${encodeURIComponent(editDate)}&boxes=${editCount}`);
     if (json.ok) {
-      if (editCount === 0) {
+      if (editCount <= 0) {
         records = records.filter(r => r.date !== editDate);
       } else {
         const rec = records.find(r => r.date === editDate);
         if (rec) rec.boxes = editCount;
+        else records.push({ date: editDate, boxes: editCount }); // 新規追加
       }
       updateSummary(); renderHistory(); renderGraph();
       closeModal();
+      showStatus('✓ 修正しました', 'toast');
+      if (editCount > 0) showCough(editCount); // おじさん演出
     } else throw new Error(json.error);
-  } catch(e) {
-    alert('保存に失敗しました。');
-  }
+  } catch(e) { showStatus('保存に失敗しました。', 'error'); }
   btn.textContent = '保存'; btn.disabled = false;
+}
+async function deleteRecord() {
+  if (!checkPasscode()) return;
+  if (!confirm(`${formatDisplay(editDate)} の記録を削除しますか？`)) return;
+  const btn = document.getElementById('btnModalSave');
+  btn.disabled = true;
+  try {
+    const json = await jsonp(`${GAS_URL}?action=set&date=${encodeURIComponent(editDate)}&boxes=0`);
+    if (json.ok) {
+      records = records.filter(r => r.date !== editDate);
+      updateSummary(); renderHistory(); renderGraph();
+      closeModal();
+      showStatus('削除しました', 'toast');
+    } else throw new Error(json.error);
+  } catch(e) { showStatus('削除に失敗しました。', 'error'); }
+  btn.disabled = false;
 }
 
 function renderGraph() {
-  const d = new Date();
-  const year = d.getFullYear(), month = d.getMonth() + 1, todayDay = d.getDate();
-  const daysInMonth = new Date(year, month, 0).getDate();
-  const ym = `${year}/${String(month).padStart(2,'0')}`;
-  document.getElementById('graphMonth').textContent = `${year}年${month}月`;
+  const now = new Date();
+  const todayYear = now.getFullYear(), todayMonth = now.getMonth()+1, todayDay = now.getDate();
+  const isCurrentMonth = (viewYear === todayYear && viewMonth === todayMonth);
+  const daysInMonth = new Date(viewYear, viewMonth, 0).getDate();
+  const ym = `${viewYear}/${String(viewMonth).padStart(2,'0')}`;
+
+  document.getElementById('graphMonth').textContent = `${viewYear}年${viewMonth}月`;
+
+  // 次月ボタンは今月なら無効
+  document.getElementById('btnNextMonth').disabled = isCurrentMonth;
+
   const dayMap = {};
   records.filter(r => r.date.startsWith(ym)).forEach(r => {
-    const day = parseInt(r.date.split('/')[2]);
-    dayMap[day] = (dayMap[day] || 0) + r.boxes;
+    dayMap[parseInt(r.date.split('/')[2])] = r.boxes;
   });
   const maxBoxes = Math.max(...Object.values(dayMap), 1);
   let html = '';
   for (let day = 1; day <= daysInMonth; day++) {
     const boxes = dayMap[day] || 0;
-    const isToday = day === todayDay, isFuture = day > todayDay;
-    const barH = boxes > 0 ? Math.max(4, Math.round((boxes / maxBoxes) * 72)) : 0;
-    const barClass = boxes === 0 ? 'bar empty' : (isToday ? 'bar today-bar' : 'bar');
-    html += `<div class="bar-wrap" style="${isFuture ? 'opacity:0.3' : ''}">
+    const isToday = isCurrentMonth && day === todayDay;
+    const isFuture = isCurrentMonth && day > todayDay;
+    const barH = boxes > 0 ? Math.max(4, Math.round((boxes/maxBoxes)*72)) : 0;
+    const barClass = boxes===0 ? 'bar empty' : (isToday ? 'bar today-bar' : 'bar');
+    const dateStr = `${viewYear}/${String(viewMonth).padStart(2,'0')}/${String(day).padStart(2,'0')}`;
+    html += `<div class="bar-wrap" style="${isFuture?'opacity:0.3':''}" onclick="openEdit('${dateStr}',${boxes})">
       <div class="${barClass}" style="height:${barH}px"></div>
-      <div class="bar-label${isToday ? ' today-label' : ''}">${day}</div>
+      <div class="bar-label${isToday?' today-label':''}">${day}</div>
     </div>`;
   }
   document.getElementById('graphArea').innerHTML = html;
   const area = document.getElementById('graphArea');
   const barW = area.scrollWidth / daysInMonth;
-  area.scrollLeft = Math.max(0, barW * (todayDay - 8));
+  const scrollTo = isCurrentMonth ? Math.max(0, barW * (todayDay - 8)) : 0;
+  area.scrollLeft = scrollTo;
 }
 
 function updateSummary() {
-  const t = today(), ym = t.slice(0, 7);
-  const monthBoxes = records.filter(r => r.date.startsWith(ym)).reduce((s,r) => s+r.boxes, 0);
-  const totalBoxes = records.reduce((s,r) => s+r.boxes, 0);
-  document.getElementById('monthAmount').textContent = '¥' + (monthBoxes * PRICE).toLocaleString();
-  document.getElementById('monthBoxes').textContent = monthBoxes + ' 箱';
-  document.getElementById('totalAmount').textContent = '¥' + (totalBoxes * PRICE).toLocaleString();
-  document.getElementById('totalBoxes').textContent = totalBoxes + ' 箱';
+  const ym = `${viewYear}/${String(viewMonth).padStart(2,'0')}`;
+  const now = new Date();
+  const isCurrentMonth = (viewYear === now.getFullYear() && viewMonth === now.getMonth()+1);
+  const viewBoxes = records.filter(r=>r.date.startsWith(ym)).reduce((s,r)=>s+r.boxes,0);
+  const totalBoxes = records.reduce((s,r)=>s+r.boxes,0);
+  document.getElementById('monthAmount').textContent = '¥'+(viewBoxes*PRICE).toLocaleString();
+  document.getElementById('monthBoxes').textContent = viewBoxes+' 箱';
+  document.querySelector('.card-label').textContent = isCurrentMonth ? '今月' : `${viewMonth}月`;
+  document.getElementById('totalAmount').textContent = '¥'+(totalBoxes*PRICE).toLocaleString();
+  document.getElementById('totalBoxes').textContent = totalBoxes+' 箱';
 }
 
 function renderHistory() {
-  const sorted = [...records].sort((a,b) => b.date.localeCompare(a.date));
+  const ym = `${viewYear}/${String(viewMonth).padStart(2,'0')}`;
+  const sorted = [...records].filter(r=>r.date.startsWith(ym)).sort((a,b)=>b.date.localeCompare(a.date));
   const list = document.getElementById('historyList');
-  if (sorted.length === 0) { list.innerHTML = '<div class="history-empty">記録がありません</div>'; return; }
-  let html = '', lastMonth = '';
+  if (sorted.length===0) { list.innerHTML='<div class="history-empty">記録がありません</div>'; return; }
+  let html='';
   sorted.forEach(r => {
-    const m = formatMonth(r.date);
-    if (m !== lastMonth) { html += `<div class="month-divider">${m}</div>`; lastMonth = m; }
-    html += `<div class="history-item">
+    html+=`<div class="history-item">
       <span class="h-date">${formatDisplay(r.date)}</span>
-      <div class="h-boxes-wrap">
-        <span class="h-boxes">${r.boxes} 箱</span>
-        <button class="btn-edit" onclick="openEdit('${r.date}', ${r.boxes})">修正</button>
-      </div>
-      <span class="h-amount">¥${(r.boxes * PRICE).toLocaleString()}</span>
+      <span class="h-boxes">${r.boxes} 箱</span>
+      <span class="h-amount">¥${(r.boxes*PRICE).toLocaleString()}</span>
+      <button class="btn-edit" onclick="openEdit('${r.date}',${r.boxes})">修正</button>
     </div>`;
   });
   list.innerHTML = html;
@@ -441,9 +511,15 @@ function toggleHistory() {
   const list = document.getElementById('historyList');
   const btn = document.getElementById('historyToggle');
   list.classList.toggle('open');
-  btn.textContent = list.classList.contains('open') ? '▲ 履歴を閉じる' : '▼ 購入履歴';
+  btn.textContent = list.classList.contains('open') ? '▲ 購入履歴を閉じる' : '▼ 購入履歴';
 }
 
+// モーダル外タップで閉じる
+document.getElementById('editModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+setupNavButtons();
 fetchRecords();
 </script>
 </body>
