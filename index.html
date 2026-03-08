@@ -163,19 +163,25 @@
     <div class="graph-zero"></div>
   </div>
 
-  <div class="input-section">
-    <div class="section-label">本日購入を記録</div>
-    <div class="counter-row">
-      <button class="btn-count" onclick="changeCount(-1)">−</button>
-      <div class="counter-display">
-        <div class="counter-num" id="countNum">1</div>
-        <span class="counter-unit">箱</span>
-        <div class="counter-price" id="countPrice">¥580</div>
-      </div>
-      <button class="btn-count" onclick="changeCount(1)">＋</button>
-    </div>
-    <button class="btn-add" id="btnAdd" onclick="addRecord()">購入記録</button>
+<div class="input-section">
+  <div class="section-label">購入を記録</div>
+
+  <div class="date-input-wrap">
+    <label for="recordDate" class="date-label">日付</label>
+    <input type="date" id="recordDate" class="date-input">
   </div>
+
+  <div class="counter-row">
+    <button class="btn-count" onclick="changeCount(-1)">−</button>
+    <div class="counter-display">
+      <div class="counter-num" id="countNum">1</div>
+      <span class="counter-unit">箱</span>
+      <div class="counter-price" id="countPrice">¥580</div>
+    </div>
+    <button class="btn-count" onclick="changeCount(1)">＋</button>
+  </div>
+  <button class="btn-add" id="btnAdd" onclick="addRecord()">購入記録</button>
+</div>
 
   <div class="status-bar" id="statusBar"></div>
 
@@ -186,9 +192,14 @@
 <!-- Edit Modal -->
 <div class="modal-overlay" id="editModal">
   <div class="modal">
-    <div class="modal-title">箱数を修正</div>
-    <div class="modal-date" id="modalDate"></div>
-    <div class="modal-counter">
+    <div class="modal-title">記録を修正</div>
+
+    <div style="margin-bottom:16px;">
+      <label for="modalDateInput" class="date-label">日付</label>
+      <input type="date" id="modalDateInput" class="date-input">
+    </div>
+
+<div class="modal-counter">
       <button class="btn-count" onclick="changeModalCount(-1)">−</button>
       <div class="modal-num" id="modalNum">1</div>
       <button class="btn-count" onclick="changeModalCount(1)">＋</button>
