@@ -24,6 +24,31 @@
   .card-amount.small { font-size: 22px; color: var(--gold); }
   .card-boxes { font-size: 11px; color: var(--dim); margin-top: 5px; }
 
+  .date-input-wrap {
+  margin-bottom: 16px;
+}
+.date-label {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.date-input {
+  width: 100%;
+  padding: 12px 14px;
+  background: #1e1c18;
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 2px;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 14px;
+}
+.date-input::-webkit-calendar-picker-indicator {
+  filter: invert(0.8);
+  cursor: pointer;
+}
+
   /* Graph */
   .graph-section { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 20px 16px 14px; margin-top: 14px; }
   .graph-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
